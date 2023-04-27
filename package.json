@@ -1,0 +1,30 @@
+{
+  "name": "polkadotjs-dapp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@polkadot/api": "^10.3.2",
+    "@polkadot/extension-dapp": "^0.45.5",
+    "@polkadot/extension-inject": "^0.34.0-beta.12",
+    "@talismn/connect-wallets": "^1.2.3",
+    "bn.js": "^5.2.1",
+    "bootstrap": "^5.2.3",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.7.3",
+    "react-dom": "^18.2.0",
+    "reactstrap": "^9.1.9"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}

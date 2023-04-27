@@ -1,0 +1,49 @@
+https://vitejs.dev/guide/
+https://www.npmjs.com/~polkadotjs - all polkadotjs npm packages
+
+https://polkadotjs.onrender.com - app url
+https://app.gmordie.com/leaderboard
+gMWbWWvZtSt6ybuVW4YYKwh6RhLfskDp61k66C4PaXJsjqaUj - talisman dot
+gMWbWWvZtSt6ybuVW4YYKwh6RhLfskDp61k66C4PaXJsjqaUj
+
+
+1) Install polkadotjs/api
+  * We need RPC or Parachain to interact with
+
+  - WsProvider is Web Sucket Provider
+  - bigNumber - BNJS in polkadot
+  - immediately invoked function expression (IIFE)
+
+
+  Building a dApp with polkadot.js, React and Typescript: 3 - How to interact with the wallet
+  - Application structure is at ./noteImages/dapp-structure image.JPG
+
+  * Things needed from the user:
+      - Address
+      - Signature - we use extension dapp to get Things
+  - Install the following:
+      - @polkadot/extension-inject@0.34.0-beta.12 
+      - @polkadot/extension-dapp
+  - create two states: accounts and selectedAccount
+  - Check if the user has web3 wallet by using web3Enable(NAME) where name is the name of the Dapp. web3Enable is from @polkadot/extension-dapp
+  * I was trying to detect my talisman wallet in my app, all the code seemed very correct but it was not detecting 
+    my wallet extension, i was on this issue for four hours and i couldnt solve it, i was sorely discouraged, as 
+    i continued in the tutorial the tutor had the same issue and all he did was to change the address on the 
+    address bar from http://127.0.0.1:5173/ to http://localhost:5173/. I felt so foolish(10/4/2023).
+
+
+  Building a dApp with polkadot.js, React and Typescript: 5 - How to make extrinsic calls
+    - making extrinsic call
+      - Install bn.js
+      - Extrinsic calls have to be signed
+
+
+
+
+  Building a dApp with polkadot.js, React and Typescript: 6 - How to make subscriptions
+     - The best way of getting updated data on the UI is over the web sucket not http
+     - when you make RPC(Remote Procedural Call) you get the data in the blockchain,
+       and as the data changes on the chain, you get the updated version on your ui in real time
+     - subscriptions
+
+
