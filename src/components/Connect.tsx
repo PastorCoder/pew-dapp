@@ -2,7 +2,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { WsProvider, ApiPromise } from "@polkadot/api";
 import { getWallets } from "@talismn/connect-wallets";
 import { useRecoilState } from "recoil";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Keyring } from "@polkadot/keyring";
 
 import TalismanLogo from "../assets/Talisman-Logo.png";
 import polkadotJsLogo from "../assets/polkadot{.js} Wallet.jpg";
@@ -18,6 +19,7 @@ import {
 } from "../recoil/WalletAtom";
 
 import "../styles/connect.css";
+import "../styles/chosenWallet.css";
 
 import {
   web3Enable,
@@ -34,7 +36,7 @@ const GM_WEB_SOCKET = "wss://ws.gm.bldnodes.org/";
 const WS_SECOND_ENDPOINT = "wss://rpc.polkadot.io";
 // const WS_SECOND_ENDPOINT = "wss://statemine-rpc-tn.dwellir.com";
 
-const App = () => {
+const Connect = () => {
   const [api, setApi] = useState<ApiPromise>();
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([]);
   const [selectedAccount, setSelectedAccount] =
@@ -46,6 +48,9 @@ const App = () => {
   const [walletName, setWalletName] = useRecoilState<string>(walletNameState);
   const [chain, setChain] = useRecoilState<string>(chainState);
   const [nodeName, setNodeName] = useRecoilState<string>(nodeNameState);
+  const [amount, setAmount] = useState<number>(0);
+  const [recipientWallet, setRecipientWallet] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleModal = () => setShowModal(!showModal);
 
@@ -53,29 +58,20 @@ const App = () => {
     const wsProvider = new WsProvider(GM_WEB_SOCKET);
     const api = await ApiPromise.create({ provider: wsProvider });
     setApi(api);
-    // console.log(api);
+
+    const [chain, nodeName] = await Promise.all([
+      api.rpc.system.chain(),
+      api.rpc.system.name(),
+      api.rpc.system.name(),
+    ]);
+    setChain(chain.toString());
+    setNodeName(nodeName.toString());
+    console.log(`You are connected to chain ${chain} using ${nodeName} `);
   };
 
-  {
-    /**
-async function handleConnect () {
-  const provider = new WsProvider(WS_SECOND_ENDPOINT);
-  const oneApi = await ApiPromise.create({ provider });
-  const [chain, nodeName, nodeVersion] = await Promise.all([
-    oneApi.rpc.system.chain(),
-    oneApi.rpc.system.name(),
-    oneApi.rpc.system.version()
-  ]);
-await oneApi.connect();
-  console.log(`You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`);
-}
+  
 
-handleConnect().catch(console.error).finally(() => process.exit());
-
- */
-  }
-
-  const handleConnection = async () => {
+  const connectTalisman = async () => {
     const extensions = await web3Enable(NAME);
 
     if (!extensions) {
@@ -93,11 +89,116 @@ handleConnect().catch(console.error).finally(() => process.exit());
     setAccounts(allAccounts);
   };
 
-  const handleDisconnect = async () => {
-    //  const provider = new WsProvider(GM_WEB_SOCKET);
-    //  const api = await ApiPromise.create({ provider });
-    //  const signer = api.getSigner();
-    //  await signer.disconnect();
+  const connectPolkadotjs = async () => {
+    const extensions = await web3Enable(NAME);
+
+    if (!extensions) {
+      throw Error("No_EXTENSION_FOUND");
+    }
+
+    const allAccounts = await web3Accounts();
+
+    if (allAccounts.length === 0) {
+      setSelectedAccount(allAccounts[0]);
+    }
+
+    setAccounts(allAccounts);
+  };
+
+  const connectNovaWallet = async () => {
+    const extensions = await web3Enable(NAME);
+
+    if (!extensions) {
+      throw Error("No_EXTENSION_FOUND");
+    }
+
+    const allAccounts = await web3Accounts();
+
+    if (allAccounts.length === 0) {
+      setSelectedAccount(allAccounts[0]);
+    }
+
+    setAccounts(allAccounts);
+  };
+
+  const connectPolkagate = async () => {
+    const extensions = await web3Enable(NAME);
+
+    if (!extensions) {
+      throw Error("No_EXTENSION_FOUND");
+    }
+
+    const allAccounts = await web3Accounts();
+
+    if (allAccounts.length === 0) {
+      setSelectedAccount(allAccounts[0]);
+    }
+
+    setAccounts(allAccounts);
+  };
+
+  // const handleTransfer = async () => {
+  //   const txHash = await api.tx.balances
+  //     .transfer(recipientWallet, amount)
+  //     .signAndSend(address);
+  //   console.log(`Submitted with hash ${txHash}`);
+  // };
+
+  {
+    /**   
+ const handleTransfer = async () => {
+   // Create a keyring instance
+   const keyring = new Keyring({ type: "sr25519" });
+
+   // Specify the recipient wallet and transfer amount
+   const recipientWallet: string = "5F1eD40bb6c5d6C271B997F63865C47B9719cB5d";
+   const amount: bigint = BigInt(100000000000); // 1 DOT in Planck
+
+   // Connect to a Polkadot node using an API provider
+   const provider = new WsProvider(GM_WEB_SOCKET);
+   const api: ApiPromise = await ApiPromise.create({ provider });
+
+   // Sign and send a transfer from Alice to Bob
+   const handleTransfer = async () => {
+     try {
+       const alice = keyring.addFromUri("//Alice", { name: "Alice" });
+       const { nonce } = await api.query.system.account(alice.address);
+
+       const tx = api.tx.balances.transfer(recipientWallet, amount);
+       const signedTx = tx.sign(alice, { nonce });
+       const txHash = await signedTx.send();
+
+       console.log(`Submitted with hash ${txHash}`);
+     } catch (err) {
+       console.error(err);
+     }
+   };
+ }; */
+  }
+
+  async function handleDisconnect(api: ApiPromise): Promise<void> {
+    const keyring = new Keyring({ type: "sr25519" }); // or 'ed25519' for Edgeware
+    const accounts = keyring.getPairs();
+    for (const account of accounts) {
+      api.disconnect();
+      keyring.removePair(account.address);
+    }
+  }
+
+  function handleButtonClick(
+    api: ApiPromise
+  ): (event: React.MouseEvent<HTMLButtonElement>) => void {
+    return (event: React.MouseEvent<HTMLButtonElement>): void => {
+      handleDisconnect(api);
+    };
+  }
+
+  const abi = useNavigate();
+
+  // const handleClick = handleButtonClick(api);
+
+  const handleClick = async (): Promise<void> => {
+    //    await handleDisconnect(abi);
   };
 
   const handleAccountSelection = async (e: ChangeEvent<HTMLSelectElement>) => {
@@ -180,7 +281,10 @@ handleConnect().catch(console.error).finally(() => process.exit());
             Connect Wallet
           </button>
         ) : (
-          <button onClick={handleDisconnect} className="disconnect-btn">
+          <button
+            onClick={api ? handleClick : undefined}
+            className="disconnect-btn"
+          >
             Disconnect Wallet
           </button>
         )}
@@ -222,26 +326,26 @@ handleConnect().catch(console.error).finally(() => process.exit());
             src={TalismanLogo}
             className="select-wallet"
             alt="Talisman  Wallet"
-            onClick={handleConnection}
+            onClick={connectTalisman }
           />
           <img
             src={polkadotJsLogo}
             className="select-wallet"
             alt="polkadot{.js} Wallet"
-            onClick={handleConnection}
+            onClick={connectPolkadotjs}
           />
 
           <img
             src={NovaWalletLogo}
             className="select-wallet"
             alt="Nova Wallet"
-            onClick={handleConnection}
+            onClick={connectNovaWallet}
           />
           <img
             src={PolkagateLogo}
             className="select-wallet"
             alt="Polkagate Wallet"
-            onClick={handleConnection}
+            onClick={connectPolkagate}
           />
         </WalletsModal>
       </div>
@@ -268,23 +372,47 @@ handleConnect().catch(console.error).finally(() => process.exit());
               Chain : <span className="wallet-name">{chain} </span> <br />
               Node : <span className="wallet-name">{nodeName}</span>
               <br />
-              Connected Wallet :
-              <span className="wallet-name"> {walletName} </span>
+              {/** Connected Wallet :
+              <span className="wallet-name"> {walletName} </span> */}
             </span>
             <span>
               Your current balance is :{" "}
               <span className="balance">{balance?.toNumber()} Dot </span>
+              <br />
+            </span>
+            <hr />
+            <span>
+              <label htmlFor="amount">Amount </label>
+              <input
+                type="number"
+                id="amount"
+                className="amount-input"
+                placeholder="Enter Amount"
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
+              <br />
+            </span>
+            <span>
+              <label htmlFor="amount">Wallet </label>
+              <input
+                type="text"
+                id="wallet"
+                className="amount-input"
+                placeholder="Enter Recipient's Wallet Address"
+                onChange={(e) => setRecipientWallet(e.target.value)}
+              />
+              <br />
             </span>
 
-            {balance.gt(new BN(0)) ? (
-              <Link to="/transfer-fund">
-                <button className="send-btn">Transfer</button>
-              </Link>
-            ) : null}
-
-            {balance.gt(new BN(0)) || "0" ? (
-              <button className="no-money">Transfer</button>
-            ) : null}
+            <button
+              className={`${
+                balance.gt(new BN(0)) && amount && recipientWallet
+                  ? "send-btn"
+                  : "no-money"
+              }`}
+            >
+              Transfer
+            </button>
           </div>
         ) : null}
       </div>
@@ -292,4 +420,9 @@ handleConnect().catch(console.error).finally(() => process.exit());
   );
 };
 
-export default App;
+
+export default Connect;
+
+
+
+
