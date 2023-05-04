@@ -33,6 +33,45 @@
 }
 
 
+.stake-btn {
+    position: relative;
+    width: 120px;
+    height: 40px;
+    font-size: 15px;
+    top: -30px;
+    left: 50px;
+    border: 1px solid #E6007A;
+    box-shadow: 1px 1px 10px rgba(17, 21, 25, 0.1);
+    color: #E6007A;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.stake-btn:hover {
+    color: #000000;
+    border: 1px solid #000000;
+    background-color: #E6007A;
+}
+
+.transfer-btn {
+    position: relative;
+    width: 120px;
+    height: 40px;
+    font-size: 15px;
+    top: -70px;
+    left: 200px;
+    border: 1px solid #E6007A;
+    box-shadow: 1px 1px 10px rgba(17, 21, 25, 0.1);
+    color: #E6007A;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.transfer-btn:hover {
+    color: #000000;
+    border: 1px solid #000000;
+    background-color: #E6007A;
+}
+
+
 .disconnect-btn {
     position: relative;
     width: 150px;
@@ -49,6 +88,26 @@
 
 
 .disconnect-btn:hover {
+    color: #000000;
+    border: 1px solid #000000;
+    background-color: #E6007A;
+}
+.unstake-btn {
+    position: relative;
+    width: 120px;
+    height: 40px;
+    font-size: 15px;
+    top: -30px;
+    left: 50px;
+    border: 1px solid #E6007A;
+    box-shadow: 1px 1px 10px rgba(17, 21, 25, 0.1);
+    color: #E6007A;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+
+.unstake-btn:hover {
     color: #000000;
     border: 1px solid #000000;
     background-color: #E6007A;

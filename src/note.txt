@@ -47,3 +47,69 @@ gMWbWWvZtSt6ybuVW4YYKwh6RhLfskDp61k66C4PaXJsjqaUj
      - subscriptions
 
 
+<StakingModal
+            handleShowModal={handleShowModal}
+            handleCloseModal={showStakingModal}
+            modalTitle="Stake"
+          >
+            <span>
+              Balance :{" "}
+              <span className="balance">{balance?.toNumber()} Dot </span>
+              <br />
+            </span>
+            <br />
+
+            <span className="">
+              <label htmlFor="amount">Amount </label>
+              <input
+                type="number"
+                id="amount"
+                className="amount-input"
+                placeholder="Enter Amount"
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
+              <br />
+              <br />
+            </span>
+
+            <div>
+              {balance.toNumber() < 5 || amount < 5 ? (
+                <span style={{ color: "red" }}>
+                  Insufficient DOT transferable balance. Minimum stake amount is
+                  5 DOT.
+                </span>
+              ) : (
+                ""
+              )}
+            </div>
+
+            {/** {balance.toNumber() > 0.1 && amount < 5 ? (
+              <span style={{ color: "red" }}>Min. stake amount: 5 DOT.</span>
+            ) : (
+              ""
+            )} */}
+
+            <div>
+              <div>
+                <span>
+                  Mint {81.1239} {NAME}
+                </span>
+                <br />
+                <span>
+                  Flexible Fee {0.0021}  {NAME} by {NAME}
+                </span>
+              </div>
+              <hr />
+              <div>Protocol APY {20.9}%</div>
+            </div>
+
+            <button
+              className={`${
+                balance.gt(new BN(0)) && amount && recipientWallet
+                  ? "send-btn"
+                  : "no-money"
+              }`}
+            >
+              Stake
+            </button>
+          </StakingModal>

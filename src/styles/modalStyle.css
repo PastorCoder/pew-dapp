@@ -15,9 +15,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
-    max-width: 600px;
-    max-height: 80%;
-    overflow-y: auto;
+    max-width: 700px;
+    max-height: 90%;
+    /* overflow-y: auto; */
     background-color: #f3f3f3;
     padding: 1rem;
     border-radius: 4px;

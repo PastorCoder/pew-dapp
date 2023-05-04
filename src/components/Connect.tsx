@@ -4,12 +4,16 @@ import { getWallets } from "@talismn/connect-wallets";
 import { useRecoilState } from "recoil";
 import { Link, useNavigate } from "react-router-dom";
 import { Keyring } from "@polkadot/keyring";
+import { Button, Alert, Collapse, Nav, NavItem, NavLink } from "reactstrap";
 
 import TalismanLogo from "../assets/Talisman-Logo.png";
 import polkadotJsLogo from "../assets/polkadot{.js} Wallet.jpg";
 import PolkagateLogo from "../assets/polkagate.jpg";
 import NovaWalletLogo from "../assets/Nova-Wallet-Logo-Update.png";
 import WalletsModal from "../components/WalletsModal";
+import StakeAndUnstakeTab from "./StakeAndUnstakeTab";
+import StakingModal from "../components/StakingModal";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   balanceState,
   walletNameState,
@@ -20,6 +24,7 @@ import {
 
 import "../styles/connect.css";
 import "../styles/chosenWallet.css";
+
 
 import {
   web3Enable,
@@ -36,7 +41,7 @@ const GM_WEB_SOCKET = "wss://ws.gm.bldnodes.org/";
 const WS_SECOND_ENDPOINT = "wss://rpc.polkadot.io";
 // const WS_SECOND_ENDPOINT = "wss://statemine-rpc-tn.dwellir.com";
 
-const Connect = () => {
+const Connect: React.FC = () => {
   const [api, setApi] = useState<ApiPromise>();
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([]);
   const [selectedAccount, setSelectedAccount] =
@@ -44,15 +49,37 @@ const Connect = () => {
   const [period, setPeriod] = useState<period>();
   const [balance, setBalance] = useRecoilState<BN>(balanceState);
   const [showModal, setShowModal] = useState(false);
+  const [handleShowModal, setHandleShowModal] = useState(false);
   const [address, setAddress] = useRecoilState<string[]>(addressState);
   const [walletName, setWalletName] = useRecoilState<string>(walletNameState);
   const [chain, setChain] = useRecoilState<string>(chainState);
   const [nodeName, setNodeName] = useRecoilState<string>(nodeNameState);
   const [amount, setAmount] = useState<number>(0);
   const [recipientWallet, setRecipientWallet] = useState<string>("");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [showText, setshowText] = useState(false);
 
   const handleModal = () => setShowModal(!showModal);
+  const showStakingModal = () => setHandleShowModal(!handleShowModal);
+
+  //  const handleToggle = (): void => setOpenIt(!openIt);
+
+  const onEntered = (): void => {
+    console.log("Content entered");
+  };
+
+  const onExited = (): void => {
+    console.log("Content exited");
+  };
+
+  console.log("Content amount", amount);
+
+  const handleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleOpenTransfer = () => {
+    setIsOpen(!isOpen);
+  };
 
   const setup = async () => {
     const wsProvider = new WsProvider(GM_WEB_SOCKET);
@@ -68,8 +95,6 @@ const Connect = () => {
     setNodeName(nodeName.toString());
     console.log(`You are connected to chain ${chain} using ${nodeName} `);
   };
-
-  
 
   const connectTalisman = async () => {
     const extensions = await web3Enable(NAME);
@@ -272,8 +297,8 @@ const Connect = () => {
 
   return (
     <div>
-      <div className="navbar">
-        {accounts.length === 0 ? (
+      <div className="navbar1">
+        {/* {accounts.length === 0 ? (
           <button
             onClick={() => setShowModal(!showModal)}
             className="connect-btn"
@@ -287,7 +312,115 @@ const Connect = () => {
           >
             Disconnect Wallet
           </button>
-        )}
+        )} */}
+
+        {/* <div>
+          <button onClick={handleOpen} className="stake-btn1">
+            Stake
+          </button>
+        </div> */}
+
+        <Nav fill pills>
+          <NavItem>
+            <NavLink active onClick={handleOpen}>
+              Liquidity Staking
+            </NavLink>
+          </NavItem>
+
+          {/* <NavItem>
+            <NavLink href="#">Unstake</NavLink>
+          </NavItem> */}
+          <NavItem>
+            <NavLink onClick={handleOpenTransfer}>Transfer</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink>Connect</NavLink>
+          </NavItem>
+        </Nav>
+        <Collapse
+          horizontal
+          isOpen={isOpen}
+          style={{
+            width: "550px",
+            height: "460px",
+            marginTop: "25px",
+            marginLeft: "350px",
+          }}
+        >
+          <Alert
+            style={{
+              backgroundColor: "#e9ecfa",
+            }}
+          >
+            <span
+              onClick={() => setIsOpen(!isOpen)}
+              style={{
+                color: "red",
+                marginLeft: "480px",
+                position: "relative",
+                top: "-5px",
+              }}
+            >
+              <CloseIcon />
+            </span>
+            <StakeAndUnstakeTab />
+          </Alert>
+        </Collapse>
+        <Collapse
+          horizontal
+          isOpen={isOpen}
+          style={{
+            width: "550px",
+            height: "460px",
+            marginTop: "25px",
+            marginLeft: "350px",
+          }}
+        >
+          <Alert
+            style={{
+              backgroundColor: "#e9ecfa",
+            }}
+          >
+            <span
+              onClick={() => setIsOpen(!isOpen)}
+              style={{
+                color: "red",
+                marginLeft: "480px",
+                position: "relative",
+                top: "-5px",
+              }}
+            >
+              <CloseIcon />
+            </span>
+            <StakeAndUnstakeTab />
+          </Alert>
+        </Collapse>
+
+        {/**
+        *  <div>
+          {accounts.length === 0 ? (
+            <button onClick={handleOpen} className="stake-btn">
+              Stake
+            </button>
+          ) : (
+            <button
+              onClick={api ? handleClick : undefined}
+              className="unstake-btn"
+            >
+              Unstake
+            </button>
+          )}
+        </div>
+        */}
+        {/* 
+        <div>
+          <button
+            onClick={() => setHandleShowModal(!handleShowModal)}
+            className="transfer-btn1"
+          >
+            Transfer
+          </button>
+        </div> */}
 
         {/**
       {accounts.length > 0 && !selectedAccount ? (
@@ -326,7 +459,7 @@ const Connect = () => {
             src={TalismanLogo}
             className="select-wallet"
             alt="Talisman  Wallet"
-            onClick={connectTalisman }
+            onClick={connectTalisman}
           />
           <img
             src={polkadotJsLogo}
@@ -407,8 +540,8 @@ const Connect = () => {
             <button
               className={`${
                 balance.gt(new BN(0)) && amount && recipientWallet
-                  ? "send-btn"
-                  : "no-money"
+                  ? "connect-send-btn"
+                  : "connect-no-money"
               }`}
             >
               Transfer
@@ -420,9 +553,4 @@ const Connect = () => {
   );
 };
 
-
 export default Connect;
-
-
-
-

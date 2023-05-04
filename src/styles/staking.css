@@ -1,0 +1,76 @@
+.amount-input {
+    border: 1px solid #959292;
+    border-radius: 8px;
+}
+
+
+.stake-yield-roi {
+    border: 1px solid #959292;
+    padding: 15px;
+    border-radius: 20px;
+}
+
+.stake-yield-roi-first-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: black;
+}
+
+
+.protocol-apy {
+    border: 1px solid #959292;
+    border-radius: 10px;
+    margin-left: 140px;
+    width: 160px;
+    height: 40px;
+    text-align: center;
+    color: black;
+}
+
+
+
+.stake-tab-btn {
+    position: relative;
+    width: 440px;
+    height: 40px;
+    font-size: 15px;
+    top: 20px;
+    left: 5px;
+    border: 1px solid blue;
+    box-shadow: 1px 1px 10px rgba(17, 21, 25, 0.1);
+    color: blue;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.stake-tab-btn:hover {
+    color: #ffffff;
+    border: 1px solid blue;
+    background-color: blue;
+}
+
+
+
+.stake-no-money {
+    position: relative;
+    width: 440px;
+    height: 40px;
+    font-size: 15px;
+    top: 20px;
+    left: 5px;
+    border: 1px solid grey;
+    box-shadow: 1px 1px 10px rgba(17, 21, 25, 0.1);
+    color: grey;
+    cursor:crosshair;
+    border-radius: 6px;
+}
+
+
+.stake-balance {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: blue;
+}
+
+.balance-txt {
+    font-size: 20px;
+}

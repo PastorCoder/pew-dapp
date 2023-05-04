@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 // import Transfer from "./component/pages/Transfer";
 import RoutePage from "./components/pages/RoutePages";
 import { RecoilRoot } from "recoil";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App(): JSX.Element {
   return (
